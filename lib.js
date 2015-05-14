@@ -210,8 +210,12 @@ WI.after.update(function(userId, doc, fieldNames, modifier, options){
       console.error(error);
     }
 });
+
+
 WI.before.update(function(userId, doc, fieldNames, modifier, options){
+  // what if outox and feed are updated in the same call? -elias
   try{
+    console.time('beforeHook')
     // var fieldName, modifier, _i, _len;
     // for (_i = 0, _len = fieldNames.length; _i < _len; _i++) {
     //   fieldName = fieldNames[_i];
@@ -228,6 +232,9 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
       if(docs.cycleComplete)
         return;
         if(key == "inbox"){
+            // nope, this needs to be done in the next step, not here
+            // and an instagram picture will be W.from=instagram , don't make a new atribute
+            // in here you are where you are from
             if(docs.source == "instagram"){
               Unionize.hooks["frominstagram"](userId, docs);
             }
@@ -252,6 +259,9 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
   }
   catch(error){
     console.error(error);
+  }
+  finally{
+    console.timeEnd('beforeHook')
   }
 });
 // W.after.update(function(){
