@@ -11,6 +11,10 @@ Package.describe({
 Package.on_use(function (api) {
   api.versionsFrom('1.0.3.1');
   api.use([
+    'templating',
+    'deps',
+    'tracker',
+    'pedrohenriquerls:reactjs',
     'matb33:collection-hooks',
     'coffeescript',
     'mongo',
@@ -18,11 +22,17 @@ Package.on_use(function (api) {
     'session',
     ], ['client', 'server']);
 
-  api.export(["W","WI","Unionize"], ['client','server']);
+  api.export(["W","WI","Unionize","Recommend"], ['client','server']);
   
   api.add_files([
     'lib.js'
   ], ['client','server']);
+  
+  api.add_files([
+    'templateRecommend.html',
+    'templateRecommend.jsx',
+    'client.js'
+  ], ['client']);
 
   api.add_files([
     'client.js'
@@ -41,6 +51,10 @@ Package.on_test(function (api) {
   // api.versionsFrom('1.0.3.1');
   api.use(
     [
+      'templating',
+      'deps',
+      'session',
+      'pedrohenriquerls:reactjs',
       'underscore',
       'ground:db',
       'aldeed:console-me',
@@ -54,9 +68,7 @@ Package.on_test(function (api) {
       'accounts-password', 
       'underscore', 
       'random', 
-      'pedrohenriquerls:reactjs',
       'mongo',
-      'session'
     ], 
     [
       'client', 
@@ -68,6 +80,12 @@ Package.on_test(function (api) {
   api.add_files([
     'lib.js'
   ], ['client','server']);
+
+  api.add_files([
+    'templateRecommend.html',
+    'templateRecommend.jsx',
+    'client.js'
+  ], ['client']);
 
   api.add_files([
     'client.js'

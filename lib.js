@@ -1,4 +1,5 @@
 Recommend = new Mongo.Collection("recommend");
+
 var WIModel = function(options){
 	return {
   "_id": options._id,
