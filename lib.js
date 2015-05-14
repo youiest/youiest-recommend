@@ -186,6 +186,7 @@ Unionize.getNewInagesRecommend = function(docs){
 // });
 
 WI.after.update(function(userId, doc, fieldNames, modifier, options){
+    console.time('WI.after.update')
     try{
         var key = fieldNames[0];
         console.log(key)
@@ -209,13 +210,16 @@ WI.after.update(function(userId, doc, fieldNames, modifier, options){
     catch(error){
       console.error(error);
     }
+    finally{
+      console.timeEnd('WI.after.update')
+    }
 });
 
 
 WI.before.update(function(userId, doc, fieldNames, modifier, options){
   // what if outox and feed are updated in the same call? -elias
   try{
-    console.time('beforeHook')
+    console.time('WI.before.update')
     // var fieldName, modifier, _i, _len;
     // for (_i = 0, _len = fieldNames.length; _i < _len; _i++) {
     //   fieldName = fieldNames[_i];
@@ -235,6 +239,7 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
             // nope, this needs to be done in the next step, not here
             // and an instagram picture will be W.from=instagram , don't make a new atribute
             // in here you are where you are from
+            // if a w is from a w.from=instagram... it is what? w.to (a user) then rec, w.to (an instagram) a link to another image
             if(docs.source == "instagram"){
               Unionize.hooks["frominstagram"](userId, docs);
             }
@@ -244,6 +249,8 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
               Unionize.hooks["inbox"](userId, docs);
             }
         }else{
+            // what if you need to edit the modifier in the hooks? add them as args
+            // we need to discuss what ultimately is done where
             Unionize.hooks[key](userId, docs);
         }
       
@@ -261,15 +268,18 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
     console.error(error);
   }
   finally{
-    console.timeEnd('beforeHook')
+    console.timeEnd('WI.before.update')
   }
 });
 // W.after.update(function(){
   
 // });
 
+
 Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
-  log("Unionize.onWInsertHook");
+  // more interesting than just logging the name of the func
+  console.time('Unionize.hooks.outbox');
+  
   // log(docs.clientUpdate,Meteor.isServer)
   if(docs.clientUpdate && Meteor.isServer)
    return docs;
@@ -299,93 +309,122 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // if(WI.find(docs.to).count()){
   //   // log("to updated");
   // }
+  
+  console.timeEnd('Unionize.hooks.outbox');
+  
   return docs;
   
   // replicated on W collection
 }
 
+
+
 Unionize.afterhooks.outbox = function(userId, docs, key){
-  log("afterhooks_inbox");
+  console.time('Unionize.afterhooks.outbox');
+  console.timeEnd('Unionize.afterhooks.outbox');
+  
   // log(userId, docs, key);
 }
 
 
 
 Unionize.hooks.inbox = function(userId, docs, key){
-  log("hooks_inbox");
+  console.time('hooks.inbox');
+  console.timeEnd('hooks.inbox');
   // log(userId, docs, key);
 }
 
 Unionize.afterhooks.inbox = function(userId, docs, key){
-  log("afterhooks_inbox");
+  console.time('afterhooks.inbox');
+  log(arguments)
+  console.timeEnd('afterhooks.inbox');
   // log(userId, docs, key);
 }
 
 Unionize.hooks.feed = function(userId, docs, key){
-  log("hooks_feed");
+  
+  console.time('hooks.feed');
+  log(arguments)
+  console.timeEnd('hooks.feed');
   // log(userId, docs, key);
 }
 
 Unionize.afterhooks.feed = function(userId, docs, key){
-  log("afterhooks_feed");
+  console.time('afterhooks.feed');
+  log(arguments)
+  console.timeEnd('afterhooks.feed');
   // log(userId, docs, key);
 }
 
 Unionize.hooks.follow = function(userId, docs, key){
-  log("hooks_follows");
+  console.time('hooks.follow');
+  log(arguments)
+  console.timeEnd('hooks.follow');
   // log(userId, docs, key);
 }
 
 Unionize.afterhooks.follow = function(userId, docs, key){
-  log("afterhooks_recommended");
+  console.time('afterhooks.follow');
+  log(arguments)
+  console.timeEnd('afterhooks.follow');
   // log(userId, docs, key);
 }
 
 Unionize.hooks.recommend = function(userId, docs, key){
-  log("hooks_recommended");
-  // log(userId, docs, key);
+  console.time('hooks.recommend');
+  log(arguments)
+  console.timeEnd('hooks.recommend');
 }
 
 Unionize.afterhooks.recommend = function(userId, docs, key){
-  log("afterhookss_recommended");
-  // log(userId, docs, key);
+  console.time('afterhooks.recommend');
+  log(arguments)
+  console.timeEnd('afterhooks.recommend');
 }
 
 Unionize.hooks.seen = function(userId, docs, key){
-  log("hooks_seen");
-  // log(userId, docs, key);
+  console.time('hooks.seen');
+  log(arguments)
+  console.timeEnd('hooks.seen');
 }
 Unionize.afterhooks.seen = function(userId, docs, key){
-  log("afterhooks_seen");
-  // log(userId, docs, key);
+  console.time('afterhooks.seen');
+  log(arguments)
+  console.timeEnd('afterhooks.seen');
 }
 
 
 Unionize.hooks.vote = function(userId, docs, key){
-  log("hooks_vote");
-  // log(userId, docs, key);
+  console.time('hooks.seen');
+  log(arguments)
+  console.timeEnd('hooks.seen');
 }
 Unionize.afterhooks.vote = function(userId, docs, key){
-  log("afterhooks_vote");
-  // log(userId, docs, key);
+  console.time('afterhooks.seen');
+  log(arguments)
+  console.timeEnd('afterhooks.seen');
 }
 
 Unionize.hooks.fromFacebook = function(userId, docs, key){
-  log("hooks_fromFacebook");
-  // log(userId, docs, key);
+  console.time('hooks.seen');
+  log(arguments)
+  console.timeEnd('hooks.seen');
 }
 
 Unionize.afterhooks.fromFacebook = function(userId, docs, key){
-  log("afterhooks_fromFacebook");
-  // log(userId, docs, key);
+  console.time('afterhooks.seen');
+  log(arguments)
+  console.timeEnd('afterhooks.seen');
 }
 
 Unionize.hooks.frominstagram = function(userId, docs, key){
-  log("hooks_fromFacebook");
-  // log(userId, docs, key);
+  console.time('hooks.seen');
+  log(arguments)
+  console.timeEnd('hooks.seen');
 }
 
 Unionize.afterhooks.frominstagram = function(userId, docs, key){
-  log("afterhooks_fromFacebook");
-  // log(userId, docs, key);
+  console.time('afterhooks.seen');
+  log(arguments)
+  console.timeEnd('afterhooks.seen');
 }
