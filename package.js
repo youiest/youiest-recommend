@@ -7,24 +7,27 @@ Package.describe({
 });
 
 
+// add grounddb here
 Package.on_use(function (api) {
   api.versionsFrom('1.0.3.1');
   api.use([
     'templating',
     'deps',
     'tracker',
-    'session',
     'pedrohenriquerls:reactjs',
-    'mongo'
+    'matb33:collection-hooks',
+    'coffeescript',
+    'mongo',
+    'accounts-base',
+    'session',
     ], ['client', 'server']);
 
-  // like Document W will be an extended coll..
-  api.export('Recommend');
-
+  api.export(["W","WI","Unionize","Recommend"], ['client','server']);
+  
   api.add_files([
     'lib.js'
   ], ['client','server']);
-
+  
   api.add_files([
     'templateRecommend.html',
     'templateRecommend.jsx',
@@ -32,27 +35,26 @@ Package.on_use(function (api) {
   ], ['client']);
 
   api.add_files([
-    'server.js'
+    'client.js'
+  ], ['client']);
+
+  api.add_files([
+    'server.js',
+    'rules.js',
+    'methods.js',
+    'publish.js'
   ], ['server']);
 
-
-  // api.add_files([
-  //   'lib.coffee','ground:db'
-  // ], ['client','server']);
-
-  // api.add_files([
-  //   'client.coffee'
-  // ], 'client');
-
-  // api.add_files([
-  //   'server.coffee', 'publish.coffee'
-  // ], 'server');
 });
 
 Package.on_test(function (api) {
   // api.versionsFrom('1.0.3.1');
   api.use(
     [
+      'templating',
+      'deps',
+      'session',
+      'pedrohenriquerls:reactjs',
       'underscore',
       'ground:db',
       'aldeed:console-me',
@@ -66,8 +68,7 @@ Package.on_test(function (api) {
       'accounts-password', 
       'underscore', 
       'random', 
-      'pedrohenriquerls:reactjs',
-      'mongo'
+      'mongo',
     ], 
     [
       'client', 
@@ -81,6 +82,12 @@ Package.on_test(function (api) {
   ], ['client','server']);
 
   api.add_files([
+    'templateRecommend.html',
+    'templateRecommend.jsx',
+    'client.js'
+  ], ['client']);
+
+  api.add_files([
     'client.js'
   ], ['client']);
 
@@ -90,29 +97,7 @@ Package.on_test(function (api) {
 
   api.add_files([
     'test.js'
-  ], ['client','server']);   
-  // api.add_files([
-  //   'lib.coffee',
-  //   'testUpdateClient.coffee',
-  //   'tests.coffee',
-  // ], ['client', 'server']);
+  ], ['client','server']);
 
-  // api.add_files([ 
-  //   'server.coffee',
-  //   'publish.coffee'
-  // ], ['server']);
-
-  // api.add_files([
-  //   'client.coffee'
-  // ], ['client']);
-  
-  // api.add_files([
-  //   'react_test.coffee'
-  // ], ['client']);
-
-  // api.add_files([
-  //   'react_package.coffee',
-  //   'react_test.coffee'
-  // ], ['client']);
 
 });
