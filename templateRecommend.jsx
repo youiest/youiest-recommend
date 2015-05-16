@@ -1,6 +1,6 @@
 /*** @jsx React.DOM */
 userId = "nicolsondsouza";
-var recommendListReact = new React.createClass({
+var RecommendListReact = new React.createClass({
 	getInitialState: function(){
 		// var recommend = [];
 		// var user = WI.findOne({
@@ -49,7 +49,7 @@ var recommendListReact = new React.createClass({
 	"render": function(){
 		var self = this;	
 		recommendlist = this.state.recommend.map(function(recommend){
-			return <recommendReact recommend={recommend} onClickrecommend={self.onClickrecommend}/>
+			return <RecommendReact recommend={recommend} onClickrecommend={self.onClickrecommend}/>
 		})
 		return( 
 			<div>
@@ -59,9 +59,9 @@ var recommendListReact = new React.createClass({
 		
 	}
 });
-Recommend.recommendListReact = recommendListReact;
+Recommend.RecommendListReact = RecommendListReact;
 
-var recommendReact = new React.createClass({
+var RecommendReact = new React.createClass({
 	"onClickrecommend": function(){
 		this.props.onClickrecommend(this.props.recommend);
 		Session.set("recommendId",this.props.recommend._id);
@@ -79,8 +79,8 @@ var recommendReact = new React.createClass({
 			)
 	}
 });
-Recommend.recommendReact = recommendReact;
+Recommend.RecommendReact = RecommendReact;
 
 Template.recommendPackage.rendered = function(){
-	React.renderComponent(<recommendListReact />, document.getElementById('recommendPackage'))
+	React.renderComponent(<RecommendListReact />, document.getElementById('recommendPackage'))
 }
