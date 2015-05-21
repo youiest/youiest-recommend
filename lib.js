@@ -106,7 +106,7 @@ Unionize.validateDocs = function(docs){
   if(!docs.to)
     throw new Meteor.Error("Target is not defined to", "404");
 }
-Unionize.connect = function(docs){
+Unionize.connectOutbox = function(docs){
 	Unionize.validateDocs(docs);
 	
 	Unionize.prepare(docs.from);
@@ -138,7 +138,8 @@ Unionize.samplefeed = function(){
 Unionize.sampleInbox = function(docs){
   var update = new getimages({"_id": Random.id()});
    update.source = "";
-	WI.update(userId,{$push: {"inbox":update}});
+	var updateId = WI.update(userId,{$push: {"inbox":update}});
+  return updateId;
 }
 
 
@@ -279,7 +280,7 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
 Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // more interesting than just logging the name of the func
   console.time('Unionize.hooks.outbox');
-  
+  Session.set("Hookoutbox","end");
   // log(docs.clientUpdate,Meteor.isServer)
   if(docs.clientUpdate && Meteor.isServer)
    return docs;
@@ -297,6 +298,7 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // console.log(docs._id,Meteor.isClient,Meteor.isServer)
   docs.key = key;
   docs.cycleComplete = true;
+  console.log("W.fuck you(docs);")
   W.insert(docs);
 
   // docs.journey.push({"onInsertW": Unionize.getUTC()- docs.startTime});
@@ -331,6 +333,7 @@ Unionize.afterhooks.outbox = function(userId, docs, key){
 Unionize.hooks.inbox = function(userId, docs, key){
   console.time('hooks.inbox');
   console.timeEnd('hooks.inbox');
+  Session.set("HookInbox","end")
   // log(userId, docs, key);
 }
 
@@ -346,6 +349,7 @@ Unionize.hooks.feed = function(userId, docs, key){
   console.time('hooks.feed');
   log(arguments)
   console.timeEnd('hooks.feed');
+   Session.set("Hookfeeds","end");
   // log(userId, docs, key);
 }
 
@@ -360,6 +364,7 @@ Unionize.hooks.follow = function(userId, docs, key){
   console.time('hooks.follow');
   log(arguments)
   console.timeEnd('hooks.follow');
+  Session.set("Hookfollow","end");
   // log(userId, docs, key);
 }
 
@@ -374,6 +379,7 @@ Unionize.hooks.recommend = function(userId, docs, key){
   console.time('hooks.recommend');
   log(arguments)
   console.timeEnd('hooks.recommend');
+  Session.set("Hookrecommend","end");
 }
 
 Unionize.afterhooks.recommend = function(userId, docs, key){

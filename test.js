@@ -76,7 +76,7 @@ if(Meteor.isServer){
 if(Meteor.isClient){
 	Tinytest.add("insert - from WI",function(test, next){
 		var testFlag = true;
-		Unionize.connect(nicolsonData1);
+		Unionize.connectOutbox(nicolsonData1);
 		// W.insert(nicolsonData1);
 	  // Tracker.autorun(function(computation){
 	  	var count = WI.find({
