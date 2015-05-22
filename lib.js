@@ -344,36 +344,7 @@ Unionize.afterhooks.inbox = function(userId, docs, key){
   // log(userId, docs, key);
 }
 
-Unionize.hooks.feed = function(userId, docs, key){
-  
-  console.time('hooks.feed');
-  log(arguments)
-  console.timeEnd('hooks.feed');
-   Session.set("Hookfeeds","end");
-  // log(userId, docs, key);
-}
 
-Unionize.afterhooks.feed = function(userId, docs, key){
-  console.time('afterhooks.feed');
-  log(arguments)
-  console.timeEnd('afterhooks.feed');
-  // log(userId, docs, key);
-}
-
-Unionize.hooks.follow = function(userId, docs, key){
-  console.time('hooks.follow');
-  log(arguments)
-  console.timeEnd('hooks.follow');
-  Session.set("Hookfollow","end");
-  // log(userId, docs, key);
-}
-
-Unionize.afterhooks.follow = function(userId, docs, key){
-  console.time('afterhooks.follow');
-  log(arguments)
-  console.timeEnd('afterhooks.follow');
-  // log(userId, docs, key);
-}
 
 Unionize.hooks.recommend = function(userId, docs, key){
   console.time('hooks.recommend');
@@ -400,16 +371,7 @@ Unionize.afterhooks.seen = function(userId, docs, key){
 }
 
 
-Unionize.hooks.vote = function(userId, docs, key){
-  console.time('hooks.seen');
-  log(arguments)
-  console.timeEnd('hooks.seen');
-}
-Unionize.afterhooks.vote = function(userId, docs, key){
-  console.time('afterhooks.seen');
-  log(arguments)
-  console.timeEnd('afterhooks.seen');
-}
+
 
 Unionize.hooks.fromFacebook = function(userId, docs, key){
   console.time('hooks.seen');
