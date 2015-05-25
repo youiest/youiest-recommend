@@ -60,17 +60,17 @@ if(Meteor.isServer){
 	  	return true;
 	  }
 	});
-	Tinytest.add("init - clear DB",function(test){
-		// empty DB on each test;
-		WI.remove({});
-		W.remove({});
+	// Tinytest.add("init - clear DB",function(test){
+	// 	// empty DB on each test;
+	// 	WI.remove({});
+	// 	W.remove({});
 
-		// create user for test
-		WI.insert(fromUser);
-		WI.insert(toUser);
-		WI.insert(unknowUser);
-		test.equal(true,W.find().count() == WI.find().count());
-	});
+	// 	// create user for test
+	// 	WI.insert(fromUser);
+	// 	WI.insert(toUser);
+	// 	WI.insert(unknowUser);
+	// 	test.equal(true,W.find().count() == WI.find().count());
+	// });
 }
 
 if(Meteor.isClient){

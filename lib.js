@@ -106,6 +106,18 @@ Unionize.validateDocs = function(docs){
   if(!docs.to)
     throw new Meteor.Error("Target is not defined to", "404");
 }
+Unionize.connect = function(docs){
+  Unionize.validateDocs(docs);
+  
+  Unionize.prepare(docs.from);
+  
+  docs.startTime = Unionize.getUTC();
+  docs.journey = [{"onConnect": Unionize.getUTC()- docs.startTime}];
+  var update = {};
+  update["outbox"] = docs;
+  WI.update(docs.from,{$push: update});
+}
+
 Unionize.connectOutbox = function(docs){
 	Unionize.validateDocs(docs);
 	
@@ -116,6 +128,7 @@ Unionize.connectOutbox = function(docs){
   var update = {};
   update["outbox"] = docs;
 	WI.update(docs.from,{$push: update});
+  // console.log(WI.find({}));
 }
 
 Unionize.sampleFollow = function(){
@@ -139,6 +152,7 @@ Unionize.sampleInbox = function(docs){
   var update = new getimages({"_id": Random.id()});
    update.source = "";
 	var updateId = WI.update(userId,{$push: {"inbox":update}});
+  // console.log(WI.find().count());
   return updateId;
 }
 
@@ -190,7 +204,7 @@ WI.after.update(function(userId, doc, fieldNames, modifier, options){
     console.time('WI.after.update')
     try{
         var key = fieldNames[0];
-        console.log(key)
+        // console.log(key)
         if(key && Unionize.afterhooks[key] && modifier["$push"]){ // && modifier["$push"][key]
         var docs = modifier["$push"][key];
         if(key == "inbox"){
@@ -231,7 +245,7 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
     // }
     // log(fieldNames, modifier)
     var key = fieldNames[0];
-    console.log(key)
+    // console.log(key)
     if(key && Unionize.hooks[key] && modifier["$push"]){ // && modifier["$push"][key]
       var docs = modifier["$push"][key];
       if(docs.cycleComplete)
@@ -280,7 +294,7 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
 Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // more interesting than just logging the name of the func
   console.time('Unionize.hooks.outbox');
-  Session.set("Hookoutbox","end");
+ 
   // log(docs.clientUpdate,Meteor.isServer)
   if(docs.clientUpdate && Meteor.isServer)
    return docs;
@@ -311,6 +325,8 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // if(WI.find(docs.to).count()){
   //   // log("to updated");
   // }
+  if(Session.get("Hookoutbox"))
+     Session.set("Hookoutbox","end");
   
   console.timeEnd('Unionize.hooks.outbox');
   
