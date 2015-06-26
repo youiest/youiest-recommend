@@ -101,16 +101,16 @@ Unionize.validateDocs = function(docs){
   if(!docs)
     throw new Meteor.Error("Please check information provided undefined", "404");
   if(!docs.from){
-    throw new Meteor.Error("Source is not defined from", "404");   
+    throw new Meteor.Error("Source is not defined from", "404");
   }
   if(!docs.to)
     throw new Meteor.Error("Target is not defined to", "404");
 }
 Unionize.connect = function(docs){
   Unionize.validateDocs(docs);
-  
+
   Unionize.prepare(docs.from);
-  
+
   docs.startTime = Unionize.getUTC();
   docs.journey = [{"onConnect": Unionize.getUTC()- docs.startTime}];
   var update = {};
@@ -120,9 +120,9 @@ Unionize.connect = function(docs){
 
 Unionize.connectOutbox = function(docs){
 	Unionize.validateDocs(docs);
-	
+
 	Unionize.prepare(docs.from);
-  
+
   docs.startTime = Unionize.getUTC();
 	docs.journey = [{"onConnect": Unionize.getUTC()- docs.startTime}];
   var update = {};
@@ -173,9 +173,9 @@ Unionize.getNewInagesRecommend = function(docs){
 // depricated
 // Unionize.connectF = function(docs){
 //   Unionize.validateDocs(docs);
-  
+
 //   Unionize.prepare(docs.from);
-  
+
 //   docs.startTime = Unionize.getUTC();
 //   docs.journey = [{"onConnect": Unionize.getUTC()- docs.startTime}];
 //   WI.update(docs.from,{$push: {"follow": docs}});
@@ -188,11 +188,11 @@ Unionize.getNewInagesRecommend = function(docs){
 
 // }
 // WI.insert.before(function(docs){
-  
+
 // });
 
 // WI.insert.after(function(docs){
-  
+
 // });
 
 // log(W.before.insert())
@@ -268,7 +268,7 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
             // we need to discuss what ultimately is done where
             Unionize.hooks[key](userId, docs);
         }
-      
+
       // modifier["$push"][key] = Unionize.onWUpdateHook(userId, docs, keys[key]);
       docs = modifier["$push"][key];
       // docs.journey.push({"onInsertWIInbox": Unionize.getUTC() - docs.startTime});
@@ -287,14 +287,14 @@ WI.before.update(function(userId, doc, fieldNames, modifier, options){
   }
 });
 // W.after.update(function(){
-  
+
 // });
 
 
 Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // more interesting than just logging the name of the func
   console.time('Unionize.hooks.outbox');
- 
+
   // log(docs.clientUpdate,Meteor.isServer)
   if(docs.clientUpdate && Meteor.isServer)
    return docs;
@@ -304,20 +304,20 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
       return docs;
     docs.clientUpdate = true;
   }
-  
+
   Unionize.prepare(docs.to);
-  
+
   // docs.journey.push({"onWUpdateHook": Unionize.getUTC()- docs.startTime});
 
   // console.log(docs._id,Meteor.isClient,Meteor.isServer)
   docs.key = key;
   docs.cycleComplete = true;
-  console.log("W.fuck you(docs);")
+  //console.log("W.fuck you(docs);") // classy stuff right there. real characters from...
   W.insert(docs);
 
   // docs.journey.push({"onInsertW": Unionize.getUTC()- docs.startTime});
 
-  
+
   var update = {};
   update["inbox"] = docs;
   WI.update(docs.to,{$push: update});
@@ -327,11 +327,11 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
   // }
   if(Session.get("Hookoutbox"))
      Session.set("Hookoutbox","end");
-  
+
   console.timeEnd('Unionize.hooks.outbox');
-  
+
   return docs;
-  
+
   // replicated on W collection
 }
 
@@ -340,7 +340,7 @@ Unionize.hooks.outbox = Unionize.onWUpdateHook = function(userId, docs, key){
 Unionize.afterhooks.outbox = function(userId, docs, key){
   console.time('Unionize.afterhooks.outbox');
   console.timeEnd('Unionize.afterhooks.outbox');
-  
+
   // log(userId, docs, key);
 }
 

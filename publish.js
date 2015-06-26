@@ -2,7 +2,7 @@ Meteor.publish("WI",function(userId){
 	return WI.find(userId);
 });
 
-Meteor.publish("WIList",function(userId){
+Meteor.publish("WIListRecommend",function(userId){
 	var wi = WI.findOne({"_id": userId});
 	var _id = [];
 
